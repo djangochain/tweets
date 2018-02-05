@@ -1,0 +1,37 @@
+{
+	"sort":["created_at"],
+	"page":1,
+	"no_records":10,
+	"criteria": {
+		"AND": [{
+			"fields": "created_at",
+			"operator": "gte",
+			"query": "2017-12-17T14:18:13"
+		    }, {
+			"fields": "location",
+			"operator": "contains",
+			"query": ""
+		    }, {
+			"fields": "hash_tags__name",
+			"operator": "contains",
+			"query": "Cricket"
+		    }
+		],
+		"OR": [{
+			"fields": "hash_tags__name",
+			"operator": "startswith",
+			"query": "cricket"
+		    }, {
+			"fields": "hash_tags__name",
+			"operator": "endswith",
+			"query": "hockey"
+		    }
+		],
+		"NOT": [{
+			"fields": "source_device",
+			"operator": "equals",
+			"query": "Twitter for Android"
+		    }
+		]
+    	}
+}

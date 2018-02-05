@@ -1,0 +1,111 @@
+#!/bin/bash
+
+while true; do
+    echo "Did you activate the virtualenv ? (y/n)"
+    read drop
+    case "$drop" in
+
+        y)
+            echo "Start: Checking Python Packages from requirement.txt"
+            pip install -I --ignore-installed -r requirement.txt
+            echo "End: Checking Python Packages from requirements.txt"
+            break
+            ;;
+        n)
+            break
+            ;;
+        *)
+            echo "$drop is not a valid choice"
+            ;;
+    esac
+done
+
+echo "Enter user of mysql ?"
+read usr
+echo "Enter password of mysql ?"
+read -s pwd
+
+
+
+while true; do
+    echo "Do you want to drop & then create a new database ? (y/n)"
+    read drop
+    case "$drop" in
+
+        y)
+            echo "Start: Drop & Create new mysql db"
+            mysql -u$usr -p$pwd -e "drop database tweets"
+            mysql -u$usr -p$pwd -e "create database tweets"
+            echo "End: Drop & Create new mysql db"
+            break
+            ;;
+        n)
+            break
+            ;;
+        *)
+            echo "$drop is not a valid choice"
+            ;;
+    esac
+done
+
+if [ "$1" == "-f" ]; then
+    echo "*************************************"
+    echo "Start: Removing all migration files"
+    find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+    find . -path "*/migrations/*.pyc"  -delete
+
+    echo "End:   Removing all migration files"
+
+    echo "*************************************"
+    echo "Start: Running makemigrations"
+    python manage.py makemigrations
+    echo "End:   Running makemigrations"
+fi
+
+echo "*************************************"
+echo "Start: Running migrate command"
+python manage.py migrate
+echo "End:   Running migrate command"
+
+while true; do
+    echo "Do you want create superuser ? (y/n)"
+    read drop
+    case "$drop" in
+
+        y)
+            echo "Start: Running createsuperuser command"
+            python manage.py createsuperuser
+            echo "End: Running createsuperuser command"
+            break
+            ;;
+        n)
+            break
+            ;;
+        *)
+            echo "$drop is not a valid choice"
+            ;;
+    esac
+done
+echo "*************************************"
+
+echo "setting character set to utf8mb4_unicode_ci"
+# For each database:
+mysql -u$usr -p$pwd -e "ALTER DATABASE tweets CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci"
+# For each table:
+mysql -u$usr -p$pwd -e "ALTER TABLE tweets.tweets_data CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -u$usr -p$pwd -e "ALTER TABLE tweets.tweets_hashtags CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+# For each column:
+mysql -u$usr -p$pwd -e "ALTER TABLE tweets.tweets_data CHANGE tweet_text tweet_text VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -u$usr -p$pwd -e "ALTER TABLE tweets.tweets_data CHANGE screen_name screen_name VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -u$usr -p$pwd -e "ALTER TABLE tweets.tweets_data CHANGE user_name user_name VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -u$usr -p$pwd -e "ALTER TABLE tweets.tweets_data CHANGE location location VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+echo "end character setting"
+
+echo "*************************************"
+echo "Make sure to have same user name and password of mysql in the django settings"
+
+
+echo "*************************************"
+echo "Start: Running dev server"
+python manage.py runserver --insecure
+
