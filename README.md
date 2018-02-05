@@ -1,4 +1,4 @@
-# Tweety
+# Tweets
 **Uses "Twitter Streaming API" to get the target tweets(real-time) for a recent high traffic event(s). Later, tweets can be filtered using REST API**
 
 ## Requirements
