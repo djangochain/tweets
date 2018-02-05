@@ -69,8 +69,40 @@ $ python manage.py runserver
 ```sh
 GET /get-woeid/
 ```
-It will give the all the woeid along with other meta details of the countries.
+It will give all the woeid along with other meta details of the countries.
 
+*Response*
+```javascript
+[
+    {
+        "name": "Worldwide",
+        "countryCode": null,
+        "url": "http://where.yahooapis.com/v1/place/1",
+        "country": "",
+        "parentid": 0,
+        "placeType": {
+            "code": 19,
+            "name": "Supername"
+        },
+        "woeid": 1
+    },
+    {
+        "name": "Winnipeg",
+        "countryCode": "CA",
+        "url": "http://where.yahooapis.com/v1/place/2972",
+        "country": "Canada",
+        "parentid": 23424775,
+        "placeType": {
+            "code": 7,
+            "name": "Town"
+        },
+        "woeid": 2972
+    },
+    {.....},
+    ..
+    ..
+]
+```
 ### Streaming
 
 ```sh
