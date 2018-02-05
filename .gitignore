@@ -1,0 +1,8 @@
+.idea
+  
+.DS_Store
+
+*.py[cod]
+/*/.DS_Store
+
+*.iml
