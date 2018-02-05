@@ -41,7 +41,7 @@ class Tweety(object):
             print ex.message, ex.args
             self.filter(keywords=keywords, async=async)
 
-    def get_woied(self):
+    def get_woeid(self):
         self.__authenticate__()
         import tweepy
         api = tweepy.API(self.__auth__)

@@ -6,11 +6,11 @@ from tweetapp.models import Tweets
 from tweetapp.serializers import TweetsListingSerializer
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-class GetWoiedAPIView(APIView):
+class GetWoeidAPIView(APIView):
     def get(self, request, *args, **kwargs):
         tweety = Tweety()
-        woied = tweety.get_woied()
-        return Response(woied)
+        woeid = tweety.get_woeid()
+        return Response(woeid)
 
 
 class StartStreamingAPIView(APIView):
@@ -19,7 +19,7 @@ class StartStreamingAPIView(APIView):
         woeid = request.GET.get("woeid", "1")
         tweety = Tweety()
         tweety.filter(keyword,woeid)
-        return Response({"success":True})
+        return Response({"success":True,"message":"Started streaming tweets with woeid"+str(woeid)})
 
 
 class FilterAPIView(APIView):
@@ -29,8 +29,8 @@ class FilterAPIView(APIView):
         a = QueryBuilder(search_text)
         sort_by = search_text["sort"]
         b = Tweets.objects.filter(*a.get_query()).order_by(*sort_by)
-        page = request.data.get('page','1') #current page number
-        per_page_records = request.data.get('no_records', '20') # No of records in a page
+        page = request.GET.get('page','1') #current page number
+        per_page_records = request.GET.get('no_records', '20') # No of records in a page
         paginator = Paginator(b,per_page_records)
         try:
             tweets = paginator.page(page)
